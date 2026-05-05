@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Loader2, Plus, X, Image as ImageIcon } from 'lucide-react';
 
-const Melinda = () => {
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+console.log('API URL', API_BASE_URL);
+
+const App = () => {
   const [status, setStatus] = useState<'idle' | 'uploading' | 'processing' | 'done'>('idle');
   const [progress, setProgress] = useState(0); // New state for upload progress
   const [caption, setCaption] = useState<string>("");
@@ -34,7 +37,7 @@ const Melinda = () => {
     formData.append('image', selectedFile);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/v1/upload', formData, {
+      const response = await axios.post(`${API_BASE_URL}/upload`, formData, {
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent.total || 100));
           setProgress(percentCompleted);
@@ -60,7 +63,7 @@ const Melinda = () => {
   };
 
   const setupSSE = (jobId: string) => {
-    const eventSource = new EventSource(`http://localhost:8000/api/v1/status/${jobId}`);
+    const eventSource = new EventSource(`${API_BASE_URL}/status/${jobId}`);
 
     eventSource.onmessage = (e) => {
       const data = JSON.parse(e.data);
@@ -84,6 +87,7 @@ const Melinda = () => {
   };
 
   const reset = () => {
+    URL.revokeObjectURL(preview)
     setPreview("");
     setStatus('idle');
     setCaption("");
@@ -178,4 +182,4 @@ const Melinda = () => {
   );
 };
 
-export default Melinda;
+export default App;

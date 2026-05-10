@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Loader2, Plus, X, Image as ImageIcon } from 'lucide-react';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-console.log('API URL', API_BASE_URL);
 
 const App = () => {
   const [status, setStatus] = useState<'idle' | 'uploading' | 'processing' | 'done'>('idle');
